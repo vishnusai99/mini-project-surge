@@ -200,9 +200,167 @@ def get_model(flags_obj, model_path, summary_path, pretrain_path, finetune_path,
             flags_obj.single_part = 'short'
 
     #SliRec
-    
+    if flags_obj.model == 'SLIREC':
+        yaml_file = '../../reco_utils/recommender/deeprec/config/sli_rec.yaml'
+        hparams = prepare_hparams(yaml_file, 
+                                embed_l2=flags_obj.embed_l2, 
+                                layer_l2=flags_obj.layer_l2, 
+                                learning_rate=flags_obj.learning_rate, 
+                                epochs=EPOCHS,
+                                EARLY_STOP=flags_obj.early_stop,
+                                manual_alpha=flags_obj.manual_alpha,
+                                manual_alpha_value=flags_obj.manual_alpha_value,
+                                batch_size=BATCH_SIZE,
+                                show_step=flags_obj.show_step,
+                                visual_step=flags_obj.visual_step,
+                                visual_type=flags_obj.visual_type,
+                                MODEL_DIR=model_path,
+                                SUMMARIES_DIR=summary_path,
+                                user_vocab=user_vocab,
+                                item_vocab=item_vocab,
+                                cate_vocab=cate_vocab,
+                                need_sample=True,
+                                train_num_ngs=train_num_ngs, # provides the number of negative instances for each positive instance for loss computation.
+                                max_seq_length=max_seq_length,
+                                pairwise_metrics=pairwise_metrics,
+                                weighted_metrics=weighted_metrics,
+                                counterfactual_recent_k=flags_obj.counterfactual_recent_k,
+                                test_dropout=flags_obj.test_dropout,
+                                time_unit=time_unit,
+                    )
+        model = SLI_RECModel(hparams, input_creator, seed=RANDOM_SEED)
+
+    elif flags_obj.model == 'DANCE':
+        if flags_obj.single_part != 'no':
+            flags_obj.discrepancy_loss_weight = 0.0
+        yaml_file = '../../reco_utils/recommender/deeprec/config/dance.yaml'
+        hparams = prepare_hparams(yaml_file, 
+                                embed_l2=flags_obj.embed_l2, 
+                                layer_l2=flags_obj.layer_l2, 
+                                discrepancy_loss_weight=flags_obj.discrepancy_loss_weight,
+                                contrastive_loss_weight=flags_obj.contrastive_loss_weight,
+                                learning_rate=flags_obj.learning_rate, 
+                                epochs=EPOCHS,
+                                EARLY_STOP=flags_obj.early_stop,
+                                pretrain_epochs=flags_obj.pretrain_epochs,
+                                finetune_epochs=flags_obj.finetune_epochs,
+                                vector_alpha=flags_obj.vector_alpha,
+                                manual_alpha=flags_obj.manual_alpha,
+                                manual_alpha_value=flags_obj.manual_alpha_value,
+                                interest_evolve=flags_obj.interest_evolve,
+                                predict_long_short=flags_obj.predict_long_short,
+                                is_clip_norm=flags_obj.is_clip_norm,
+                                contrastive_length_threshold=flags_obj.contrastive_length_threshold,
+                                contrastive_recent_k=flags_obj.contrastive_recent_k,
+                                batch_size=BATCH_SIZE,
+                                show_step=flags_obj.show_step,
+                                visual_step=flags_obj.visual_step,
+                                visual_type=flags_obj.visual_type,
+                                MODEL_DIR=model_path,
+                                SUMMARIES_DIR=summary_path,
+                                user_vocab=user_vocab,
+                                item_vocab=item_vocab,
+                                cate_vocab=cate_vocab,
+                                need_sample=True,
+                                train_num_ngs=train_num_ngs, # provides the number of negative instances for each positive instance for loss computation.
+                                max_seq_length=max_seq_length,
+                                pairwise_metrics=pairwise_metrics,
+                                weighted_metrics=weighted_metrics,
+                                counterfactual_recent_k=flags_obj.counterfactual_recent_k,
+                                test_dropout=flags_obj.test_dropout,
+                                use_complex_attention=flags_obj.use_complex_attention,
+                                use_time4lstm=flags_obj.use_time4lstm,
+                                time_unit=time_unit,
+                    )
+        model = DANCEModel(hparams, input_creator, seed=RANDOM_SEED)
+
+    #SliRec
+    elif flags_obj.model == 'SASLIREC':
+        yaml_file = '../../reco_utils/recommender/deeprec/config/sasli_rec.yaml'
+        hparams = prepare_hparams(yaml_file, 
+                                embed_l2=flags_obj.embed_l2, 
+                                layer_l2=flags_obj.layer_l2, 
+                                attn_loss_weight=flags_obj.attn_loss_weight,
+                                learning_rate=flags_obj.learning_rate, 
+                                epochs=EPOCHS,
+                                EARLY_STOP=flags_obj.early_stop,
+                                batch_size=BATCH_SIZE,
+                                show_step=flags_obj.show_step,
+                                visual_step=flags_obj.visual_step,
+                                visual_type=flags_obj.visual_type,
+                                MODEL_DIR=model_path,
+                                SUMMARIES_DIR=summary_path,
+                                user_vocab=user_vocab,
+                                item_vocab=item_vocab,
+                                cate_vocab=cate_vocab,
+                                need_sample=True,
+                                train_num_ngs=train_num_ngs, # provides the number of negative instances for each positive instance for loss computation.
+                                max_seq_length=max_seq_length,
+                                pairwise_metrics=pairwise_metrics,
+                                weighted_metrics=weighted_metrics,
+                                test_dropout=flags_obj.test_dropout,
+                    )
+        model = SASLI_RECModel(hparams, input_creator, seed=RANDOM_SEED)
+
+    #GRU4REC
+    elif flags_obj.model == 'GRU4REC':
+        yaml_file = '../../reco_utils/recommender/deeprec/config/gru4rec.yaml'
+        hparams = prepare_hparams(yaml_file, 
+                                embed_l2=flags_obj.embed_l2, 
+                                layer_l2=flags_obj.layer_l2, 
+                                learning_rate=flags_obj.learning_rate, 
+                                epochs=EPOCHS,
+                                EARLY_STOP=flags_obj.early_stop,
+                                batch_size=BATCH_SIZE,
+                                show_step=flags_obj.show_step,
+                                visual_step=flags_obj.visual_step,
+                                visual_type=flags_obj.visual_type,
+                                MODEL_DIR=model_path,
+                                SUMMARIES_DIR=summary_path,
+                                user_vocab=user_vocab,
+                                item_vocab=item_vocab,
+                                cate_vocab=cate_vocab,
+                                need_sample=True,
+                                train_num_ngs=train_num_ngs, # provides the number of negative instances for each positive instance for loss computation.
+                                max_seq_length=max_seq_length,
+                                hidden_size=40,
+                                pairwise_metrics=pairwise_metrics,
+                                weighted_metrics=weighted_metrics,
+                                test_dropout=flags_obj.test_dropout,
+                    )
+        model = GRU4RecModel(hparams, input_creator, seed=RANDOM_SEED)
+
+    #DIN
+    elif flags_obj.model == 'DIN':
+        yaml_file = '../../reco_utils/recommender/deeprec/config/din.yaml'
+        hparams = prepare_hparams(yaml_file, 
+                                embed_l2=flags_obj.embed_l2, 
+                                layer_l2=flags_obj.layer_l2, 
+                                learning_rate=flags_obj.learning_rate, 
+                                epochs=EPOCHS,
+                                EARLY_STOP=flags_obj.early_stop,
+                                batch_size=BATCH_SIZE,
+                                show_step=flags_obj.show_step,
+                                visual_step=flags_obj.visual_step,
+                                visual_type=flags_obj.visual_type,
+                                MODEL_DIR=model_path,
+                                SUMMARIES_DIR=summary_path,
+                                PRETRAIN_DIR=pretrain_path,
+                                FINETUNE_DIR=finetune_path,
+                                user_vocab=user_vocab,
+                                item_vocab=item_vocab,
+                                cate_vocab=cate_vocab,
+                                need_sample=True,
+                                train_num_ngs=train_num_ngs, # provides the number of negative instances for each positive instance for loss computation.
+                                max_seq_length=max_seq_length, hidden_size=40,
+                                pairwise_metrics=pairwise_metrics,
+                                weighted_metrics=weighted_metrics,
+                                test_dropout=flags_obj.test_dropout,
+                    )
+        model = DINModel(hparams, input_creator, seed=RANDOM_SEED)
+
     # SURGE
-    if flags_obj.model == 'SURGE':
+    elif flags_obj.model == 'SURGE':
         yaml_file = '../../reco_utils/recommender/deeprec/config/gcn.yaml'
         hparams = prepare_hparams(yaml_file, 
                                 embed_l2=flags_obj.embed_l2, 
@@ -232,7 +390,65 @@ def get_model(flags_obj, model_path, summary_path, pretrain_path, finetune_path,
                     )
         model = SURGEModel(hparams, input_creator, seed=RANDOM_SEED)
 
-    
+    #DIEN
+    elif flags_obj.model == 'DIEN':
+        yaml_file = '../../reco_utils/recommender/deeprec/config/dien.yaml'
+        hparams = prepare_hparams(yaml_file, 
+                                embed_l2=flags_obj.embed_l2, 
+                                layer_l2=flags_obj.layer_l2, 
+                                learning_rate=flags_obj.learning_rate, 
+                                epochs=EPOCHS,
+                                EARLY_STOP=flags_obj.early_stop,
+                                batch_size=BATCH_SIZE,
+                                show_step=flags_obj.show_step,
+                                visual_step=flags_obj.visual_step,
+                                visual_type=flags_obj.visual_type,
+                                MODEL_DIR=model_path,
+                                SUMMARIES_DIR=summary_path,
+                                PRETRAIN_DIR=pretrain_path,
+                                FINETUNE_DIR=finetune_path,
+                                user_vocab=user_vocab,
+                                item_vocab=item_vocab,
+                                cate_vocab=cate_vocab,
+                                need_sample=True,
+                                train_num_ngs=train_num_ngs, # provides the number of negative instances for each positive instance for loss computation.
+                                hidden_size=40,
+                                max_seq_length=max_seq_length,
+                                pairwise_metrics=pairwise_metrics,
+                                weighted_metrics=weighted_metrics,
+                                test_dropout=flags_obj.test_dropout,
+                    )
+        model = DIENModel(hparams, input_creator, seed=RANDOM_SEED)
+
+    #Caser
+    elif flags_obj.model == 'CASER':
+        yaml_file = '../../reco_utils/recommender/deeprec/config/caser.yaml'
+        hparams = prepare_hparams(yaml_file, 
+                                embed_l2=flags_obj.embed_l2, 
+                                layer_l2=flags_obj.layer_l2, 
+                                learning_rate=flags_obj.learning_rate, 
+                                epochs=EPOCHS,
+                                EARLY_STOP=flags_obj.early_stop,
+                                batch_size=BATCH_SIZE,
+                                show_step=flags_obj.show_step,
+                                visual_step=flags_obj.visual_step,
+                                visual_type=flags_obj.visual_type,
+                                MODEL_DIR=model_path,
+                                SUMMARIES_DIR=summary_path,
+                                user_vocab=user_vocab,
+                                item_vocab=item_vocab,
+                                cate_vocab=cate_vocab,
+                                need_sample=True,
+                                train_num_ngs=train_num_ngs, # provides the number of negative instances for each positive instance for loss computation.
+                                T=1, n_v=128, n_h=128, L=3,
+                                min_seq_length=5,
+                                max_seq_length=max_seq_length,
+                                pairwise_metrics=pairwise_metrics,
+                                weighted_metrics=weighted_metrics,
+                                test_dropout=flags_obj.test_dropout,
+                    )
+        model = CaserModel(hparams, input_creator)
+
     return model
 
 
